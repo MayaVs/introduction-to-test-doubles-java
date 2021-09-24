@@ -8,7 +8,13 @@ import testhelper.DummySimpleLogger;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import org.junit.runners.Parameterized;
+import org.junit.runner.RunWith;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+@RunWith(Parameterized.class)
 public class BubbleTeaOrderServiceSpyTest {
 
     private DebitCard testDebitCard;
@@ -16,6 +22,18 @@ public class BubbleTeaOrderServiceSpyTest {
     private DummySimpleLogger dummySimpleLogger;
     private BubbleTeaMessenger spiedMessenger;
     private BubbleTeaOrderService bubbleTeaOrderService;
+
+    @Parameterized.Parameter(0)
+    public String teaType;
+    @Parameterized.Parameter(1)
+    public double price;
+
+    @Parameterized.Parameters(name = "{index}: Test with teaType = {0}, price = {1} ")
+    public static Collection<Object[]> data() {
+        Object[][] data = new Object[][]{{"OolongMilkTea", 2.50}, {"JasmineMilkTea", 3.15}, {"MatchaMilkTea", 4.20}, {"PeachIceTea",  2.80}, {"LycheeIceTea", 3.50}};
+        return Arrays.asList(data);
+    }
+
 
     @BeforeEach
     public void setup() {
@@ -29,15 +47,16 @@ public class BubbleTeaOrderServiceSpyTest {
     @Test
     public void shouldCreateBubbleTeaOrderRequestWhenCreateOrderRequestIsCalled() {
 
+        System.out.println(teaType);
         //Arrange
-        BubbleTea bubbleTea = new BubbleTea(BubbleTeaTypeEnum.MatchaMilkTea, 6.78);
+        BubbleTea bubbleTea = new BubbleTea(BubbleTeaTypeEnum.valueOf(teaType), price);
         BubbleTeaRequest bubbleTeaRequest = new BubbleTeaRequest(paymentDetails, bubbleTea);
 
         BubbleTeaOrderRequest expectedResult = new BubbleTeaOrderRequest(
                 "hello kitty",
                 "sanrio puroland",
                 "0123456789",
-                BubbleTeaTypeEnum.MatchaMilkTea
+                BubbleTeaTypeEnum.valueOf(teaType)
         );
 
         //Act
