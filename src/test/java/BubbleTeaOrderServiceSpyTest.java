@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import testhelper.DummySimpleLogger;
 
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import org.junit.runners.Parameterized;
@@ -24,13 +25,13 @@ public class BubbleTeaOrderServiceSpyTest {
     private BubbleTeaOrderService bubbleTeaOrderService;
 
     @Parameterized.Parameter(0)
-    public String teaType;
+    public BubbleTeaTypeEnum teaType;
     @Parameterized.Parameter(1)
     public double price;
 
     @Parameterized.Parameters(name = "{index}: Test with teaType = {0}, price = {1} ")
     public static Collection<Object[]> data() {
-        Object[][] data = new Object[][]{{"OolongMilkTea", 2.50}, {"JasmineMilkTea", 3.15}, {"MatchaMilkTea", 4.20}, {"PeachIceTea",  2.80}, {"LycheeIceTea", 3.50}};
+        Object[][] data = new Object[][]{{BubbleTeaTypeEnum.OolongMilkTea, 2.50}, {BubbleTeaTypeEnum.JasmineMilkTea, 3.15}, {BubbleTeaTypeEnum.MatchaMilkTea, 4.20}, {BubbleTeaTypeEnum.PeachIceTea,  2.80}, {BubbleTeaTypeEnum.LycheeIceTea, 3.50}};
         return Arrays.asList(data);
     }
 
@@ -49,14 +50,14 @@ public class BubbleTeaOrderServiceSpyTest {
 
         System.out.println(teaType);
         //Arrange
-        BubbleTea bubbleTea = new BubbleTea(BubbleTeaTypeEnum.valueOf(teaType), price);
+        BubbleTea bubbleTea = new BubbleTea(teaType, price);
         BubbleTeaRequest bubbleTeaRequest = new BubbleTeaRequest(paymentDetails, bubbleTea);
 
         BubbleTeaOrderRequest expectedResult = new BubbleTeaOrderRequest(
                 "hello kitty",
                 "sanrio puroland",
                 "0123456789",
-                BubbleTeaTypeEnum.valueOf(teaType)
+                teaType
         );
 
         //Act
